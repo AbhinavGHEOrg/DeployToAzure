@@ -50,5 +50,4 @@ jobs:
 
       - name: "Run Az Commands After Login"
         run: |
-          az account show
-          az group list
+          az account list | jq -r .'[].name'
