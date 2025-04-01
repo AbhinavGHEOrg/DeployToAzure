@@ -51,3 +51,4 @@ jobs:
       - name: "Run Az Commands After Login"
         run: |
           az account list | jq -r .'[].name'
+          az account show
