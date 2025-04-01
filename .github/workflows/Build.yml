@@ -48,4 +48,7 @@ jobs:
           subscription-id: "298fe9c3-b8b7-44c1-a0bf-08423c9c085d"
           # enable-AzPSSession: true
 
-          
+      - name: "Run Az Commands After Login"
+        run: |
+          az account show
+          az group list
