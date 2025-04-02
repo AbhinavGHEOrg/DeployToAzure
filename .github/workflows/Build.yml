@@ -54,7 +54,8 @@ jobs:
           echo "Fetching token..."
           ID_TOKEN=$(curl -s -H "Authorization: bearer $ACTIONS_ID_TOKEN" \
             "https://token.actions.githubusercontent.com?audience=api://AzureADTokenExchange")
-      
+
+          echo $ID_TOKEN
           # echo $ID_TOKEN | jq -R 'split(".") | .[1] | @base64d | fromjson'
           # Use base64 to decode the token without BOM issues
           echo $ID_TOKEN | awk -F'.' '{print $2}' | base64 -d | jq .
