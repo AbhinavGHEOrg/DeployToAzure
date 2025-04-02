@@ -42,7 +42,6 @@ jobs:
         with:
           client-id: "fc5fd68c-1792-4de1-84eb-e252bba7f06d"
           tenant-id: "aa2fe7da-b503-429e-ba22-d8a4ebf37575"
-          subscription-id: "298fe9c3-b8b7-44c1-a0bf-08423c9c085d"
           enable-AzPSSession: true
 
       - name: "Run Az Commands After Login"
