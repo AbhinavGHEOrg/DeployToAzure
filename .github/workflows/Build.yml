@@ -55,7 +55,9 @@ jobs:
           ID_TOKEN=$(curl -s -H "Authorization: bearer $ACTIONS_ID_TOKEN" \
             "https://token.actions.githubusercontent.com?audience=api://AzureADTokenExchange")
       
-          echo $ID_TOKEN | jq -R 'split(".") | .[1] | @base64d | fromjson'
+          # echo $ID_TOKEN | jq -R 'split(".") | .[1] | @base64d | fromjson'
+          # Use base64 to decode the token without BOM issues
+          echo $ID_TOKEN | awk -F'.' '{print $2}' | base64 -d | jq .
 
       - name: Use Azure Login Output
         run: echo "Azure login step completed with status ${{ steps.azure_login_manual.outcome }}"
@@ -63,6 +65,3 @@ jobs:
       - name: "Run Az Commands After Login"
         run: |
           az account list | jq -r .'[].name'
-
-
-
