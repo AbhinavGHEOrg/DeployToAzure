@@ -35,19 +35,34 @@ jobs:
           echo Add other actions to build,
           echo test, and deploy your project.
 
-      # Runs a set of commands using the runners shell
-      - name: Azure Login
-        uses: Azure/login@v2.2.0
-        id: azure_login
-        with:
-          client-id: "fc5fd68c-1792-4de1-84eb-e252bba7f06d"
-          tenant-id: "aa2fe7da-b503-429e-ba22-d8a4ebf37575"
-          subscription-id: "298fe9c3-b8b7-44c1-a0bf-08423c9c085d"
-          enable-AzPSSession: true
+      # # Runs a set of commands using the runners shell
+      # - name: Azure Login
+      #   uses: Azure/login@v2.2.0
+      #   id: azure_login
+      #   with:
+      #     client-id: "fc5fd68c-1792-4de1-84eb-e252bba7f06d"
+      #     tenant-id: "aa2fe7da-b503-429e-ba22-d8a4ebf37575"
+      #     subscription-id: "298fe9c3-b8b7-44c1-a0bf-08423c9c085d"
+      #     enable-AzPSSession: true
+
+      - name: Request OIDC token manually
+        id: azure_login_manual
+        run: |
+          curl -s -H "Authorization: bearer $ACTIONS_ID_TOKEN" \
+            "https://token.actions.githubusercontent.com/.well-known/openid-configuration"
+      
+          echo "Fetching token..."
+          ID_TOKEN=$(curl -s -H "Authorization: bearer $ACTIONS_ID_TOKEN" \
+            "https://token.actions.githubusercontent.com?audience=api://AzureADTokenExchange")
+      
+          echo $ID_TOKEN | jq -R 'split(".") | .[1] | @base64d | fromjson'
 
       - name: Use Azure Login Output
-        run: echo "Azure login step completed with status ${{ steps.azure_login.outcome }}"
+        run: echo "Azure login step completed with status ${{ steps.azure_login_manual.outcome }}"
 
       - name: "Run Az Commands After Login"
         run: |
           az account list | jq -r .'[].name'
+
+
+
